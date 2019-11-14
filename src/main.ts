@@ -25,14 +25,14 @@ export const loop = ErrorMapper.wrapLoop(() => {
   var upgraders = _(Game.creeps).filter((c: Creep) => c.memory.role == 'upgrader');
 
   if (upgraders.size() < MIN_UPGRADERS) {
-    var status = Game.spawns[MAIN_SPAWN].spawnCreep([WORK, WORK, MOVE, CARRY], createRandomRoleName('Upgrader'), { memory: { role: 'upgrader' } });
+    var status = Game.spawns[MAIN_SPAWN].spawnCreep([WORK, WORK, MOVE, CARRY], createRandomRoleName('Upgrader'), { memory: { role: 'upgrader', state: 'harvesting' } });
     if (status == OK) {
       console.log('Spawned new upgrader creep');
     }
   }
 
   if (harvesters.size() < MIN_HARVESTERS) {
-    var status = Game.spawns[MAIN_SPAWN].spawnCreep([WORK, WORK, MOVE, CARRY], createRandomRoleName('Harvester'), { memory: { role: 'harvester' } });
+    var status = Game.spawns[MAIN_SPAWN].spawnCreep([WORK, WORK, MOVE, CARRY], createRandomRoleName('Harvester'), { memory: { role: 'harvester', state: 'harvesting' } });
     if (status == OK) {
       console.log('Spawned new harvester creep');
     }

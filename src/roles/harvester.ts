@@ -3,7 +3,22 @@ import Role from "./role";
 class Harvester implements Role {
 
     run(creep: Creep) {
-        if (creep.carry.energy < creep.carryCapacity) {
+
+        if (creep.memory.state == undefined) {
+            creep.memory.state = 'harvesting'
+        }
+
+        if (creep.memory.state == 'upgrading' && creep.carry.energy == 0) {
+            creep.memory.state = "harvesting";
+            creep.say('⚡️ Gathering Energy');
+        }
+
+        if (creep.memory.state == 'harvesting' && (creep.carry.energy >= creep.carryCapacity)) {
+            creep.memory.state = 'upgrading';
+            creep.say('🔆 Upgrading')
+        }
+
+        if (creep.memory.state == 'harvesting') {
             const targets = creep.room.find(FIND_SOURCES);
 
             if (targets.length > 0) {
@@ -11,13 +26,13 @@ class Harvester implements Role {
                     creep.moveTo(targets[0]);
                 }
             }
-        } else {
+        } else if (creep.memory.state == 'upgrading') {
             /**
              * Prioritize transferring energy to spawn, however if spawn is full,
              * use the stored energy to upgrade the room controller.
              */
             var spawn = Game.spawns["Spawn1"];
-            if (spawn && (spawn.energy < spawn.energyCapacity)) {
+            if (spawn) {
                 if (creep.transfer(spawn, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(spawn);
                 }
